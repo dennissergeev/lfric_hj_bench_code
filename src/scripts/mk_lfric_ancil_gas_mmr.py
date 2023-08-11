@@ -32,7 +32,10 @@ dummy_cube = create_dummy_cube(n_res=96, pm180=True)
 # Load vertical levels file
 thlev = load_vert_lev(paths.vert / "vertlevs_L38_29t_9s_40km")
 level_height = iris.coords.AuxCoord(
-    points=thlev, units="m", var_name="level_height", attributes={"positive": "up"}
+    points=thlev,
+    units="m",
+    var_name="level_height",
+    attributes={"positive": "up"},
 )
 model_level_number = iris.coords.DimCoord(
     points=np.arange(len(thlev), dtype=int),
@@ -82,7 +85,9 @@ dset_final = iris.cube.CubeList()
 for gas_var_name, gas_prop in gases.items():
     cl = iris.cube.CubeList()
     for lh, mln in zip(level_height, model_level_number):
-        cube = dummy_cube.copy(data=np.ones_like(dummy_cube.data) * gas_prop["data"])
+        cube = dummy_cube.copy(
+            data=np.ones_like(dummy_cube.data) * gas_prop["data"]
+        )
         cube.add_aux_coord(lh, data_dims=())
         cube.add_aux_coord(mln, data_dims=())
         # cube.add_aux_coord(gc, data_dims=())
