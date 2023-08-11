@@ -33,5 +33,12 @@ results_raw_lfric = data / "raw" / "lfric"
 results_proc_lfric = data / "proc" / "lfric"
 
 # Vertical levels
-# vert = data / "vert"
-vert = data_final / "vert"
+vert = data / "vert"
+# vert = data_final / "vert"
+
+# Ancillary files
+ancil = data / "ancil"
+
+# Common Met Office data
+big_data = Path("/common/lfric/data")
+mo_ancil = big_data / "ancils"
