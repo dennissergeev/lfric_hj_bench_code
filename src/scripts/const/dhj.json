@@ -1,0 +1,32 @@
+[
+    {
+        "name": "gravity",
+        "units": "m s-2",
+        "value": 9.42
+    },
+    {
+        "name": "radius",
+        "units": "m",
+        "value": 9.44e7
+    },
+    {
+        "name": "day",
+        "units": "s",
+        "value": 305008.9954941547
+    },
+    {
+        "name": "reference_surface_pressure",
+        "units": "Pa",
+        "value": 220e5
+    },
+    {
+        "name": "dry_air_spec_heat_press",
+        "units": "m2 s-2 K-1",
+        "value": 14308.4
+    },
+    {
+        "name": "dry_air_molecular_weight",
+        "units": "kg mol-1",
+        "value": 0.0018102464837796647
+    }
+]
