@@ -1,0 +1,220 @@
+air:
+  molar_weight: 28.966
+  name: Dry air
+  socrates_ip: 38
+ar:
+  molar_weight: 39.948
+  name: Argon
+  socrates_ip: 37
+c2h2:
+  molar_weight: 26.0373
+  name: Acetylene
+  socrates_ip: 34
+c2h6:
+  molar_weight: 30.069
+  name: Ethane
+  socrates_ip: 46
+cfc11:
+  molar_weight: 137.3686
+  name: CFC11
+  socrates_ip: 14
+cfc113:
+  molar_weight: 187.3765
+  name: CFC113
+  socrates_ip: 16
+cfc114:
+  molar_weight: 170.921
+  name: CFC114
+  socrates_ip: 20
+cfc12:
+  molar_weight: 120.914
+  name: CFC12
+  socrates_ip: 15
+ch3:
+  molar_weight: 15.0345
+  name: Methyl radical
+  socrates_ip: 47
+ch4:
+  molar_weight: 16.043
+  name: Methane
+  socrates_ip: 6
+co:
+  molar_weight: 28.0106
+  name: Carbon monoxide
+  socrates_ip: 5
+co2:
+  molar_weight: 44.01
+  name: Carbon Dioxide
+  socrates_ip: 2
+cosso:
+  molar_weight: 96.129
+  name: cis-OSSO
+  socrates_ip: 53
+crh:
+  molar_weight: 53.004
+  name: Chromium hydride
+  socrates_ip: 29
+cs:
+  molar_weight: 132.9054519
+  name: Cesium
+  socrates_ip: 32
+feh:
+  molar_weight: 56.853
+  name: Iron hydride
+  socrates_ip: 28
+h2:
+  molar_weight: 2.01588
+  name: Hydrogen
+  socrates_ip: 23
+h2co:
+  molar_weight: 30.026
+  name: Formaldehyde
+  socrates_ip: 48
+h2o:
+  molar_weight: 18.0153
+  name: Water Vapour
+  socrates_ip: 1
+h2o2:
+  molar_weight: 34.0147
+  name: Hydrogen peroxide
+  socrates_ip: 45
+h2s:
+  molar_weight: 34.081
+  name: Hydrogen sulphide
+  socrates_ip: 36
+hcfc22:
+  molar_weight: 86.46892
+  name: HCFC22
+  socrates_ip: 17
+hcl:
+  molar_weight: 36.461
+  name: Hydrogen chloride
+  socrates_ip: 51
+hcn:
+  molar_weight: 27.0253
+  name: Hydrogen cyanide
+  socrates_ip: 35
+hdo:
+  molar_weight: 19.0214
+  name: Semiheavy water
+  socrates_ip: 50
+he:
+  molar_weight: 4.002602
+  name: Helium
+  socrates_ip: 24
+hf:
+  molar_weight: 20.00689
+  name: Hydrogen fluoride
+  socrates_ip: 52
+hfc125:
+  molar_weight: 120.02227
+  name: HFC125
+  socrates_ip: 18
+hfc134a:
+  molar_weight: 102.03184
+  name: HFC134A
+  socrates_ip: 19
+hno3:
+  molar_weight: 63.0129
+  name: Nitric acid
+  socrates_ip: 12
+ho2:
+  molar_weight: 33.0067
+  name: Hydroperoxy radical
+  socrates_ip: 49
+ho2no2:
+  molar_weight: 79.0122
+  name: Peroxynitric acid
+  socrates_ip: 44
+hono:
+  molar_weight: 47.0134
+  name: Nitrous acid
+  socrates_ip: 43
+k:
+  molar_weight: 39.0983
+  name: Potassium
+  socrates_ip: 27
+li:
+  molar_weight: 6.941
+  name: Lithium
+  socrates_ip: 30
+n:
+  molar_weight: 14.00674
+  name: Atomic nitrogen
+  socrates_ip: 40
+n2:
+  molar_weight: 28.0134
+  name: Nitrogen
+  socrates_ip: 13
+n2o:
+  molar_weight: 44.0128
+  name: Dinitrogen Oxide
+  socrates_ip: 4
+n2o5:
+  molar_weight: 108.0104
+  name: Dinitrogen pentoxide
+  socrates_ip: 42
+na:
+  molar_weight: 22.98976928
+  name: Sodium
+  socrates_ip: 26
+nh3:
+  molar_weight: 17.0306
+  name: Ammonia
+  socrates_ip: 11
+'no':
+  molar_weight: 30.0061
+  name: Nitrogen monoxide
+  socrates_ip: 8
+no2:
+  molar_weight: 46.0055
+  name: Nitrogen dioxide
+  socrates_ip: 10
+no3:
+  molar_weight: 63.0128
+  name: Nitrate radical
+  socrates_ip: 41
+o:
+  molar_weight: 15.9994
+  name: Atomic oxygen
+  socrates_ip: 39
+o2:
+  molar_weight: 31.9988
+  name: Oxygen
+  socrates_ip: 7
+o3:
+  molar_weight: 47.9982
+  name: Ozone
+  socrates_ip: 3
+ocs:
+  molar_weight: 60.075
+  name: Carbonyl sulphide
+  socrates_ip: 25
+ph3:
+  molar_weight: 33.99758
+  name: Phosphine
+  socrates_ip: 33
+rb:
+  molar_weight: 85.4678
+  name: Rubidium
+  socrates_ip: 31
+so2:
+  molar_weight: 64.0628
+  name: Sulphur dioxide
+  socrates_ip: 9
+tio:
+  molar_weight: 63.866
+  name: Titanium oxide
+  socrates_ip: 21
+tosso:
+  molar_weight: 96.129
+  name: trans-OSSO
+  socrates_ip: 54
+vo:
+  molar_weight: 66.9409
+  name: Vanadium oxide
+  socrates_ip: 22
+yosos:
+  molar_weight: 96.129
+  name: OSO-S
+  socrates_ip: 55
