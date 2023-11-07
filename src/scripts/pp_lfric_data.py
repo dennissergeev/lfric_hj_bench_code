@@ -2,6 +2,7 @@
 """Process LFRic output by interpolating selected fields to a common grid."""
 # Standard library
 from functools import partial
+import os
 from pathlib import Path
 from time import time
 import warnings
@@ -26,6 +27,13 @@ import paths
 
 # Global definitions and styles
 warnings.filterwarnings("ignore")
+
+os.environ["PROJ_IGNORE_CELESTIAL_BODY"] = "YES"
+
+
+def chunker(seq, size):
+    """Iterate over a sequence in chunks."""
+    return (seq[pos : pos + size] for pos in range(0, len(seq), size))
 
 
 @click.command()
@@ -65,6 +73,12 @@ warnings.filterwarnings("ignore")
     show_default=True,
     type=click.Choice(["inst", "mean"]),
 )
+@click.option(
+    "--file_chunk_size",
+    type=int,
+    default=1000,
+    help="Number of files to process in one go.",
+)
 def main(
     inpdir,
     outdir,
@@ -75,26 +89,41 @@ def main(
     level_height,
     model_top,
     time_prof,
+    file_chunk_size,
 ):
     """Main entry point of the script."""
     t0 = time()
     L = create_logger(Path(__file__))
     L.info(f"{planet=}")
-
     L.info(f"{label=}")
+    # Global attributes of the output file
+    gl_attrs = {
+        "name": label,
+        "planet": planet,
+        "processed": "True",
+    }
+    # Create a dummy cube with a target grid
+    tgt_cube = create_dummy_cube(nlat=90, nlon=144, pm180=True)
 
     # Height coordinate
     if level_height == "uniform":
         add_levs = partial(
             add_equally_spaced_height_coord, model_top_height=model_top
         )
-    elif level_height == "um_L38_29t_9s_40km":
+    elif level_height.startswith("um_"):
         add_levs = partial(
             add_um_height_coord,
-            path_to_levels_file=paths.vert / "vertlevs_L38_29t_9s_40km",
+            path_to_levels_file=paths.vert
+            / level_height.replace("um_", "vertlevs_"),
         )
     else:
-        raise ValueError(f"level_height={level_height} is not valid.")
+        raise ValueError(f"{level_height=} is not valid.")
+
+    def combi_callback(cube, field, filename):
+        [
+            fix_time_coord(cube, field, filename),
+            add_levs(cube, field, filename),
+        ]
 
     # Input directory
     if inpdir:
@@ -121,7 +150,7 @@ def main(
         L.info(f"{outdir=}")
     outdir.mkdir(parents=True, exist_ok=True)
 
-    # Make a list of files matching the file mask and the start day threshold
+    # Compile the list of files
     fnames = sorted(
         inpdir.glob(f"*/*{c_num}*/{file_stem}.nc"),
         key=lambda x: int(x.parent.parent.name),
@@ -134,50 +163,50 @@ def main(
     else:
         L.info(f"fnames({len(fnames)}) = {fnames[0]} ... {fnames[-1]}")
 
-    def combi_callback(cube, field, filename):
-        [
-            fix_time_coord(cube, field, filename),
-            add_levs(cube, field, filename),
-        ]
+    # Load the data in chunks
+    for _ichunk, file_batch in enumerate(chunker(fnames, file_chunk_size)):
+        L.info(
+            f"Loading {file_chunk_size} files ="
+            f" {file_batch[0]} ... {file_batch[-1]}"
+        )
+        # Make a label depending on the chunk
+        chunk_label = f"_{int(file_batch[0].parent.parent.name):03d}"
+        chunk_label += f"-{int(file_batch[-1].parent.parent.name):03d}"
+        gl_attrs["source_files"] = ", ".join(
+            [str(Path(*f.parts[-3:])) for f in file_batch]
+        )
+        # Load the data
+        cl_raw = load_lfric_raw(
+            file_batch, callback=combi_callback, drop_coord=drop_coord
+        )
+        if len(cl_raw) == 0:
+            L.critical("Files are empty!")
+            continue
+        cubes_to_regrid = unique_cubes(cl_raw)
+        if len(w_cubes := cubes_to_regrid.extract("w_in_wth")) == 2:
+            cubes_to_regrid.remove(w_cubes[-1])
+        for cube in cubes_to_regrid:
+            if cube.units == "ms-1":
+                cube.units = "m s-1"
+        # L.info(f"{cubes_to_regrid=}")
+        # Regrid all cubes
+        cl_proc = simple_regrid_lfric(
+            cubes_to_regrid, tgt_cube=tgt_cube, ref_cube_constr=ref_cube
+        )
+        const = init_const(planet, directory=paths.const)
+        add_planet_conf_to_cubes(cl_proc, const=const)
 
-    cl_raw = load_lfric_raw(
-        fnames, callback=combi_callback, drop_coord=drop_coord
-    )
-    if len(cl_raw) == 0:
-        L.critical("Files are empty!")
-        return
-    # L.info(f"{cl_raw=}")
-    cubes_to_regrid = unique_cubes(cl_raw)
-    if len(w_cubes := cubes_to_regrid.extract("w_in_wth")) == 2:
-        cubes_to_regrid.remove(w_cubes[-1])
-    for cube in cubes_to_regrid:
-        if cube.units == "ms-1":
-            cube.units = "m s-1"
-    # L.info(f"{cubes_to_regrid=}")
-    # Create a dummy cube with a target grid
-    tgt_cube = create_dummy_cube(nlat=90, nlon=144, pm180=True)
-    # Regrid all cubes
-    cl_proc = simple_regrid_lfric(
-        cubes_to_regrid, tgt_cube=tgt_cube, ref_cube_constr=ref_cube
-    )
-    const = init_const(planet, directory=paths.const)
-    add_planet_conf_to_cubes(cl_proc, const=const)
-
-    # Write the data to a netCDF file
-    gl_attrs = {
-        "name": label,
-        "planet": planet,
-        "processed": "True",
-    }
-    days = 0 + get_cube_rel_days(cl_proc[0]).astype(int)
-    day_str = f"days{days[0]}"
-    if len(days) > 1:
-        day_str += f"_{days[-1]}"
-    fname_out = (
-        outdir / f"{label}_{c_num}_{time_prof}_{day_str}_regr.nc".lower()
-    )
-    save_cubelist(cl_proc, fname_out, **gl_attrs)
-    L.success(f"Saved to {fname_out}")
+        # Write the data to a netCDF file
+        days = 0 + get_cube_rel_days(cl_proc[0]).astype(int)
+        day_str = f"days{days[0]}"
+        if len(days) > 1:
+            day_str += f"_{days[-1]}"
+        fname_out = (
+            outdir
+            / f"{label}_{c_num}_{time_prof}_{chunk_label}_regr.nc".lower()
+        )
+        save_cubelist(cl_proc, fname_out, **gl_attrs)
+        L.success(f"Saved to {fname_out}")
     L.info(f"Execution time: {time() - t0:.1f}s")
 
 
