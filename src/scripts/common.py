@@ -1,12 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Objects used by many scripts in the project."""
 # External modules
 from aeolus.model import lfric, um
 
 # Local modules
 import paths
-
 
 MODELS = {
     "um": {

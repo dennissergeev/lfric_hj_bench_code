@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Common paths useful for manipulating datasets and generating figures."""
 from pathlib import Path
 

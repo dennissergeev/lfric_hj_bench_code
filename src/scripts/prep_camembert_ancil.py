@@ -160,7 +160,7 @@ def interpolate_mmr_in_height(
             # Skip non-MMR cubes
             continue
 
-        cube.var_name = cube.name().removeprefix("mmr_")
+        cube.var_name = cube.name().replace("mmr_", "")
         cube.long_name = f"{cube.var_name}_mmr"
         cube.units = "kg kg-1"
         cube.remove_coord("unknown")
@@ -251,19 +251,27 @@ def main(
     add_missing_as_zeros: bool,
     verbose: bool,
 ) -> None:
-    r"""
+    """
     Prepare CAMEMBERT input data for the UM and LFRic.
 
-    1. Load the data from the GitHub repository\n
-    2. Calculate potential temperature and exner function\n
-    3. Integrate the hydrostatic balance equation to get height\n
-    4. Convert VMR to MMR, opionally set missing gases to 0\n
-    5. Interpolate in the vertical to the specified vertical levels set\n
-    6. Broadcast in the horizontal to the UM grid and save to ancillary file\n
-    7. Regrid from the UM's lat-lon grid to the LFRic's cubed-sphere grid\n
+    1. Load the data from the GitHub repository
+
+    2. Calculate potential temperature and exner function
+
+    3. Integrate the hydrostatic balance equation to get height
+
+    4. Convert VMR to MMR, opionally set missing gases to 0
+
+    5. Interpolate in the vertical to the specified vertical levels set
+
+    6. Broadcast in the horizontal to the UM grid and save to ancillary file
+
+    7. Regrid from the UM's lat-lon grid to the LFRic's cubed-sphere grid
     """
     # Load the raw data
-    filename = f"CAMEMBERT_{planet[:-1].upper()}{planet[-1]}_IC.dat"
+    filename = (
+        f"CAMEMBERT_{planet.replace('_', '-')[:-1].upper()}{planet[-1]}_IC.dat"
+    )
     df = load_init_cond(f"{CAMEMBERT_GITHUB_RAW}/InitialConditions/{filename}")
 
     # Planetary constants
@@ -271,8 +279,15 @@ def main(
 
     # Calculate additional thermodynamic variables
     df = prep_profiles(df, const)
-    click.secho(f"\ntheta={np.round(df.theta_k.values, 2)}", fg="blue")
-    click.secho(f"\nheight={np.round(df.height_m.values, 2)}", fg="blue")
+    click.secho(f"\nsize={df.shape}", fg="blue")
+    click.secho(
+        f"\ntheta={','.join(np.round(df.theta_k.values, 2).astype(str))}",
+        fg="blue",
+    )
+    click.secho(
+        f"\nheight={','.join(np.round(df.height_m.values, 2).astype(str))}",
+        fg="blue",
+    )
 
     # Convert VMR to MMR
     s_gases = load_socrates_gases(paths.scripts / "gases.yaml")
