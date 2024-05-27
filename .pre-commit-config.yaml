@@ -1,9 +1,10 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0  # Use the ref you want to point at
+    rev: v4.6.0  # Use the ref you want to point at
     hooks:
       # Prevent giant files from being committed.
     - id: check-added-large-files
+      args: ['--maxkb=100000']
       # Check whether files parse as valid Python.
     - id: check-ast
       # Check for file name conflicts on case-insensitive file-systems.
@@ -29,20 +30,27 @@ repos:
       args: ['--django']
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.0.292"
+    rev: "v0.4.5"
     hooks:
       - id: ruff
         types: [file, python]
         args: [--fix]
 
   - repo: https://github.com/psf/black
-    rev: "23.9.1"
+    rev: "24.4.2"
     hooks:
       - id: black
         types: [file, python]
         args: [--config=./pyproject.toml]
 
+  - repo: https://github.com/asottile/blacken-docs
+    rev: 1.16.0
+    hooks:
+    - id: blacken-docs
+      types: [file, rst]
+      additional_dependencies: [black]
+
   - repo: https://github.com/abravalheri/validate-pyproject
-    rev: "v0.14"
+    rev: "v0.18"
     hooks:
       - id: validate-pyproject

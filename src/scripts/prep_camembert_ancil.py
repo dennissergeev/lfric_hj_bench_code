@@ -25,16 +25,15 @@ sys.path.append(
     str(
         Path.home()
         / "sandbox"
-        / "ancil_contrib_trunk"
+        / "contrib_2.0.0"
         / "Models"
         / "LFRic"
         / "ProtoGAL"
         / "bin"
     )
 )
-from ancil_regrid_um_to_mesh import main as regrid  # noqa: E402
-
 # Local
+from ancil_regrid_um_to_mesh import main as regrid  # noqa: E402
 import paths  # noqa: E402
 
 CAMEMBERT_GITHUB_RAW = (
@@ -161,7 +160,7 @@ def interpolate_mmr_in_height(
             continue
 
         cube.var_name = cube.name().replace("mmr_", "")
-        cube.long_name = f"{cube.var_name}_mmr"
+        cube.long_name = f"mass_fraction_of_{cube.var_name}_in_air"
         cube.units = "kg kg-1"
         cube.remove_coord("unknown")
         promote_aux_coord_to_dim_coord(cube, "height_m")
