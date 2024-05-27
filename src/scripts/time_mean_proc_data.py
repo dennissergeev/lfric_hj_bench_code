@@ -1,18 +1,18 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Average post-processed data in time and save as a netCDF file."""
-import warnings
 from datetime import datetime
+import warnings
+
+from aeolus.calc import last_n_day_mean
+from aeolus.io import load_data, save_cubelist
 
 # External modules
 import iris
-from aeolus.calc import last_n_day_mean
-from aeolus.io import load_data, save_cubelist
-from tqdm import tqdm
 
 # Local modules
 import paths
 from shared import MODELS, TF_CASES
+from tqdm import tqdm
 
 # Ignore warnings about time coordinate bounds
 warnings.filterwarnings("ignore")
@@ -60,8 +60,8 @@ for model_key, model_prop in tqdm(MODELS.items()):
         )
         # Update global attributes to insert the name of the model
         GLOBAL_ATTRS["title"] = f"Model Output from {model_prop['title']}"
-        GLOBAL_ATTRS[
-            "date_created"
-        ] = f"{datetime.utcnow():%Y-%m-%d %H:%M:%S} GMT"
+        GLOBAL_ATTRS["date_created"] = (
+            f"{datetime.utcnow():%Y-%m-%d %H:%M:%S} GMT"
+        )
         # Save the result
         save_cubelist(dset_tm, fname_out, **GLOBAL_ATTRS)

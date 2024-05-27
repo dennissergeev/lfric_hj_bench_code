@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Interpolate processed UM or LFRic output to sigma-p surfaces."""
 
 # Commonly used standard library tools
@@ -8,19 +7,20 @@ from functools import partial
 from pathlib import Path
 from time import time
 
+from aeolus.calc import calc_derived_cubes
+
 # External modules
 from aeolus.const import init_const
 from aeolus.io import load_data, save_cubelist
-from aeolus.model import lfric
-from aeolus.calc import calc_derived_cubes
 from aeolus.log import create_logger
+from aeolus.model import lfric
+from common import MODELS
 import iris
 from iris.experimental import stratify
 import numpy as np
 
 # Local modules
 import paths
-from shared import MODELS
 
 # Global definitions and styles
 # Self name
