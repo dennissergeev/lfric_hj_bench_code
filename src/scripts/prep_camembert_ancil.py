@@ -241,6 +241,7 @@ def broadcast_to_3d(
 @click.option(
     "-n",
     "--n_res",
+    help="UM grid resolution.",
     default=96,
     type=click.INT,
 )
