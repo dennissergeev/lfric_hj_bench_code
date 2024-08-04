@@ -12,7 +12,7 @@ from aeolus.io import create_dummy_cube, load_vert_lev
 import click
 import iris
 from iris.coords import AuxCoord
-from iris.util import promote_aux_coord_to_dim_coord  # , new_axis
+from iris.util import promote_aux_coord_to_dim_coord
 import numpy as np
 import pandas as pd
 
@@ -178,10 +178,11 @@ def broadcast_to_3d(
     cube_list: iris.cube.CubeList,
     level_height: AuxCoord,
     model_level_number: AuxCoord,
+    n_res: int,
 ) -> iris.cube.CubeList:
     """Broadcast vertical profiles to a horizontal UM grid."""
     # Create a dummy cube on a UM grid
-    dummy_cube = create_dummy_cube(n_res=96, pm180=True)
+    dummy_cube = create_dummy_cube(n_res=n_res, pm180=True)
     # dummy_cube.data[:, :] = 1.0
     # dummy_cube.add_aux_coord(level_height[0], data_dims=())
     # dummy_cube = new_axis(dummy_cube, "level_height")
@@ -238,6 +239,12 @@ def broadcast_to_3d(
     help="Add missing gases with zero values.",
 )
 @click.option(
+    "-n",
+    "--n_res",
+    default=96,
+    type=click.INT,
+)
+@click.option(
     "-v",
     "--verbose",
     is_flag=True,
@@ -248,6 +255,7 @@ def main(
     c_num: str,
     levels: str,
     add_missing_as_zeros: bool,
+    n_res: int,
     verbose: bool,
 ) -> None:
     """
@@ -308,7 +316,10 @@ def main(
 
     # Broadcast horizontally
     dset = broadcast_to_3d(
-        dset, level_height=level_height, model_level_number=model_level_number
+        dset,
+        level_height=level_height,
+        model_level_number=model_level_number,
+        n_res=n_res,
     )
 
     # Add zero values
@@ -334,7 +345,7 @@ def main(
     anc_um = (
         paths.ancil
         / "um"
-        / f"camembert_case3_{planet}_gas_mmr_n96e_l{nlev-1}_{note}.nc"
+        / f"camembert_case3_{planet}_gas_mmr_n{n_res}e_l{nlev-1}_{note}.nc"
     )
     anc_lfric = (
         paths.ancil
