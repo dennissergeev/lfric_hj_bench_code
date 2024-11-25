@@ -52,7 +52,7 @@ def load_socrates_gases(file_path: Path, remove_air=True) -> dict:
     return dict(sorted(s_gases.items(), key=lambda x: x[1]["socrates_ip"]))
 
 
-def dataframe_to_cubelist(df: pd.DataFrame) -> iris.cube.CubeList():
+def dataframe_to_cubelist(df: pd.DataFrame) -> iris.cube.CubeList:
     """Convert dataframe to iris cubelist."""
     try:
         from iris.pandas import as_cubes
