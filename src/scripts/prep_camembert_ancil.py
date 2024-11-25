@@ -325,7 +325,7 @@ def main(
 
     # Add zero values
     if add_missing_as_zeros:
-        note = "all_gases"
+        note = "_all_gases"
         all_gases = {**s_gases}
         dset_final = iris.cube.CubeList()
         for gas_name in all_gases:
@@ -339,20 +339,20 @@ def main(
                 zero_cube.long_name = f"{gas_name}_mmr"
                 dset_final.append(zero_cube)
     else:
-        note = "nonzero_only"
+        note = ""
         dset_final = dset
 
     # Define the output file names
     anc_um = (
         paths.ancil
         / "um"
-        / f"camembert_case3_{planet}_gas_mmr_n{n_res}e_l{nlev-1}_{note}.nc"
+        / f"camembert_case3_{planet}_gas_mmr_n{n_res}e_l{nlev-1}{note}.nc"
     )
     anc_lfric = (
         paths.ancil
         / "lfric"
         / c_num
-        / f"camembert_case3_{planet}_gas_mmr_{c_num}_l{nlev-1}_{note}.nc"
+        / f"camembert_case3_{planet}_gas_mmr_{c_num}_l{nlev-1}{note}.nc"
     )
 
     # Save the data on UM grid
