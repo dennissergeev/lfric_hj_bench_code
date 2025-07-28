@@ -5,7 +5,7 @@ Scripts to plot results of LFRic runs for hot Jupiters
 
 ```bash
 # Create a conda environment
-conda create -n ants2 python=3.12 ipykernel pip aeolus esmpy=8.4 gdal iris matplotlib numba pandas pykdtree
+conda create -n ants2 python=3.12 f90nml ipykernel pip aeolus esmpy=8.4 gdal iris matplotlib numba pandas pykdtree
 conda init
 source ~/.bashrc
 conda activate ants2
